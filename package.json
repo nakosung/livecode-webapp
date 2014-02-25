@@ -1,0 +1,21 @@
+{
+  "name": "livecode-webapp",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin" : {
+    "livecode-webapp" : "./livecode-webapp.coffee"
+  }
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "zk-observable": "0.0.3",
+    "webmake-coffee": "~0.1.3",
+    "webmake": "~0.3.26",
+    "jade": "~1.1.5",
+    "commander": "~2.1.0"
+  }
+}
