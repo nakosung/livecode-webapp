@@ -34,15 +34,28 @@ go = (app) ->
 				else
 					console.error err	
 
+	bounce = (fn,timeout) ->
+		timer = undefined
+		body = ->
+			timer = undefined
+			fn()
+		->
+			clearTimeout timer if timer
+			timer = setTimeout body, timeout			
+	
 	filters = []
 	add_filter = (pattern,job) ->
+		job = bounce job, 0
 		filters.push (path) ->
 			if pattern.test path
 				console.log path
 				job()
 
-	watcher.on 'change', (path,stats) ->
+	worker = (path,stats) ->
 		filters.map (f) -> f path, stats
+
+	watcher.on 'change', worker
+	watcher.on 'add', worker
 
 	add_filter /\.coffee$/, (coffee 'webapp.coffee', js)
 	add_filter /\.jade$/, (jade 'webapp.jade', html)
