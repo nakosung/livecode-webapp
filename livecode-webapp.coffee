@@ -1,5 +1,7 @@
 #!/usr/bin/env coffee
 go = (app) ->
+	chokidar = require 'chokidar'
+	watcher = chokidar.watch '.', ignored : /[\/\\]\./, persistent:true
 	zko = (require 'zk-observable')()
 	js = zko '/dyn-webapps/'+app+'/js'
 	html = zko '/dyn-webapps/'+app+'/html'
@@ -30,16 +32,20 @@ go = (app) ->
 					js content
 					console.log 'js uploaded'
 				else
-					console.error err
+					console.error err	
 
-	watch = (file,job) ->
-		job()
-		fs.watchFile file, interval:250, ->
-			console.log file + ' changed!'
-			job()
+	filters = []
+	add_filter = (pattern,job) ->
+		filters.push (path) ->
+			if pattern.test path
+				console.log path
+				job()
 
-	watch 'webapp.coffee', (coffee 'webapp.coffee', js)
-	watch 'webapp.jade', (jade 'webapp.jade', html)
+	watcher.on 'change', (path,stats) ->
+		filters.map (f) -> f path, stats
+
+	add_filter /\.coffee$/, (coffee 'webapp.coffee', js)
+	add_filter /\.jade$/, (jade 'webapp.jade', html)
 
 program = require 'commander'
 
