@@ -17,6 +17,8 @@
     "webmake": "~0.3.26",
     "jade": "~1.1.5",
     "commander": "~2.1.0",
-    "chokidar": "~0.8.1"
+    "chokidar": "~0.8.1",
+    "stylus": "~0.42.3",
+    "async": "~0.2.10"
   }
 }

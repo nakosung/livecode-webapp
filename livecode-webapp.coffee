@@ -1,10 +1,25 @@
 #!/usr/bin/env coffee
+
+zko_with_hash = (path) ->
+	zko = (require 'zk-observable')()
+	crypto = require 'crypto'
+	zko_text = zko path	
+	zko_sha1 = zko path + '/sha1'
+
+	(text) ->
+		hash = crypto.createHash 'sha1'
+		hash.update text, 'utf8'
+		sha1 = hash.digest('hex')
+
+		zko_text text
+		(zko path + '/' + sha1) text
+		zko_sha1 sha1
+
 go = (app) ->
 	chokidar = require 'chokidar'
 	watcher = chokidar.watch '.', ignored : /[\/\\]\./, persistent:true
-	zko = (require 'zk-observable')()
-	js = zko '/dyn-webapps/'+app+'/js'
-	html = zko '/dyn-webapps/'+app+'/html'
+	js = zko_with_hash '/dyn-webapps/'+app+'/js'
+	html = zko_with_hash '/dyn-webapps/'+app+'/html'
 
 	fs = require 'fs'
 
