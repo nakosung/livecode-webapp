@@ -13,7 +13,7 @@ zko_with_hash = (path) ->
 
 		zko_text text
 		(zko path + '/' + sha1) text
-		zko_sha1 sha1
+		zko_sha1 sha1		
 
 go = (app) ->
 	chokidar = require 'chokidar'
